@@ -86,3 +86,33 @@ The supplied FreeType archive's public-symbol index contains `pcf_driver_class`,
 contents, not proof that every archive member is retained in the final DLL or
 that external optional libraries are absent. Preserve relevant module notices
 and verify actual linked contents before claiming a complete module inventory.
+## Runtime file correspondence (2026-09-10)
+
+The following local runtime files match the official NVIDIA Git blobs and sizes.
+The comparison used GitHub's complete version-tag tree metadata and the Git blob
+ID calculated from the local file, without downloading or replacing the binary.
+This identifies identical content; it does not reconstruct the original download
+history or replace review of the separately supplied runtime terms.
+
+| Local runtime | Official release file | Bytes | Git blob ID |
+|---|---|---:|---|
+| `OptiScaler/nvngx_dlss.dll` | [DLSS v310.5.0 release](https://github.com/NVIDIA/DLSS/blob/v310.5.0/lib/Windows_x86_64/rel/nvngx_dlss.dll) | 54778992 | `220fd1b9e522a279e9fcf11e0b03e8abd91cf58d` |
+| `OptiScaler/streamline/nvngx_dlssg.dll` | [DLSS v310.7.0 release](https://github.com/NVIDIA/DLSS/blob/v310.7.0/lib/Windows_x86_64/rel/nvngx_dlssg.dll) | 7519856 | `fbafdced456db1567d59dc1637dc127cc83c5f15` |
+
+The official [Streamline 2.12.0 release](https://github.com/NVIDIA-RTX/Streamline/releases/tag/v2.12.0)
+provides `streamline-sdk-v2.12.0.zip` (231958617 bytes). The downloaded archive
+matches the SHA-256 digest in the official release metadata. Its `bin/x64/`
+files `sl.common.dll`, `sl.dlss_g.dll`, `sl.interposer.dll`, `sl.pcl.dll`, and
+`sl.reflex.dll` were compared byte-for-byte with the MHWFG runtime and all match.
+No downloaded binary was executed and none of the tested runtime files changed.
+The SDK DLSS, Reflex and third-party notices are included in the notice index.
+
+## Detours historical qualification
+
+The baseline library's old-path history includes
+[5a5aabe68690b62a38403a1d5757748d54165179](https://github.com/optiscaler/OptiScaler/commit/5a5aabe68690b62a38403a1d5757748d54165179),
+whose message is "using Artur's detours lib", followed by later library changes.
+The local header identifies Microsoft Detours 4.0.1. Neither that header nor the
+Microsoft version-tag license establishes that the supplied library is an
+unmodified build of that tag. The matching implementation source and build
+settings remain to be identified; no replacement library has been built or used.

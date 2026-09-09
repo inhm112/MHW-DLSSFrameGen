@@ -24,7 +24,7 @@ Do not infer that every unresolved build recipe requires individual permission.
 `notice_present` means only that the identified notice is copied here verbatim.
 It does not establish complete component coverage, binary-to-source correspondence,
 or approval of the combined distribution. Source paths below are relative to the
-prepared OptiScaler source tree; that tree is not included in this candidate.
+MHWFG source tree supplied in the repository and MHWFG-source.zip.
 
 | Component | Source notice path | Copy | Status and scope |
 |---|---|---|---|
@@ -91,11 +91,12 @@ concerns the particular runtime files and their terms.
 | Streamline headers and sl.param | Representative opening notices are provided above; `notice_pending` remains for complete file coverage. Runtime terms are separate |
 | AntiLag2 | Opening notice provided above; original file notices must remain in the later source export |
 | latencyflex | Apache-2.0 text supplied below, matching the explicit local header declaration; preserve original attribution and identify upstream/local modifications during source export |
-| device_info | `notice_pending`: an upstream full notice has been located, but matching the local source revision remains pending; flag-set and SHA1 notices are provided above |
+| device_info | [MIT notice](licenses/device-info-MIT-LICENSE.txt) supplied: both local source files explicitly name GPUOpen-Tools/device_info and MIT, with AMD attribution. Exact upstream revision and local changes remain separately unverified; the local source files and notices are retained in the source export |
 | NGX/DLSS, XeSS, Agility SDK and legacy D3DX | `notice_pending`, `runtime_terms_pending`: check the specific SDK/header and runtime materials separately, including the exact files proposed for distribution |
 
-The exact corresponding source export and complete dependency materials are
-still pending. A successful local build does not close these items. These
+The modified project source is now included in the repository and source ZIP.
+Complete dependency implementation source/build correspondence remains pending.
+A successful local build does not close these items. These
 notices provide no new approval of proprietary runtime redistribution or of
 license compatibility for the combined binary.
 
@@ -131,4 +132,21 @@ be retained and checked separately.
 - DLSS SR 310.5.0: [NVIDIA original license](licenses/nvidia-dlss-310.5.0-LICENSE.txt), retrieved from https://raw.githubusercontent.com/NVIDIA/DLSS/v310.5.0/LICENSE.txt .
 - DLSSG 310.7.0: [NVIDIA original license](licenses/nvidia-dlss-310.7.0-LICENSE.txt), retrieved from https://raw.githubusercontent.com/NVIDIA/DLSS/v310.7.0/LICENSE.txt .
 
-Original bytes are retained. These version-tag notices supplement the Streamline 2.12 notice; they do not establish the original download provenance of the locally tested runtime files.
+Original license bytes are retained. The two tested DLSS files now match the official
+version-tag release blobs by Git object ID and file size; see SOURCES.md. This
+establishes their content correspondence, not their historical download route.
+The five Streamline runtime DLLs also match the official SDK archive byte-for-byte.
+
+## Notices from the matching Streamline SDK archive
+
+The following complete, unchanged files were copied from the official
+`streamline-sdk-v2.12.0.zip` used for the five runtime DLL comparisons:
+
+- `bin/x64/nvngx_dlss.license.txt`: [SDK DLSS terms](licenses/streamline-2.12-nvngx-dlss-LICENSE.txt).
+- `bin/x64/reflex.license.txt`: [SDK Reflex terms](licenses/streamline-2.12-reflex-LICENSE.txt).
+- `3rd-party-licenses.md`: [SDK third-party notices](licenses/streamline-2.12-third-party-licenses.md).
+
+The SDK-wide third-party list is retained as supplied and includes development
+tools; it is not a claim that all those tools are bundled in MHWFG. The existing
+Streamline framework license is byte-identical to the archive's `license.txt`.
+The separate DLSS 310.5.0 and 310.7.0 notices above remain included.
