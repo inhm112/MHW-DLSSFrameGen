@@ -1,0 +1,119 @@
+#pragma once
+
+#include <framegen/IFGFeature_Dx12.h>
+
+#include <proxies/Streamline_Proxy.h>
+
+class DLSSG_Dx12 : public virtual IFGFeature_Dx12
+{
+  private:
+    uint32_t _width = 0;
+    uint32_t _height = 0;
+    std::optional<bool> _haveHudless = std::nullopt;
+
+    sl::ViewportHandle viewport { 0 };
+    sl::FrameToken* frameToken = nullptr;
+
+    ID3D12Fence* dlssgFence[BUFFER_COUNT] = {};
+    UINT64 lastOptionFrame = 0;
+
+    struct DispatchDlssgOptionsCache
+    {
+        bool valid = false;
+        sl::DLSSGMode mode {};
+        uint32_t numFramesToGenerate = 0;
+        sl::DLSSGQueueParallelismMode queueParallelismMode {};
+        float dynamicTargetFrameRate = 0.0f;
+    };
+
+    DispatchDlssgOptionsCache _dispatchDlssgOptionsCache {};
+
+    void InvalidateDispatchDlssgOptionsCache() { _dispatchDlssgOptionsCache.valid = false; }
+
+    bool DispatchDlssgOptionsMatchSubmitted(const sl::DLSSGOptions& options) const;
+    void StoreDispatchDlssgOptionsCache(const sl::DLSSGOptions& options);
+
+    struct DispatchReflexOptionsCache
+    {
+        bool valid = false;
+        sl::ReflexMode mode {};
+        bool useMarkersToOptimize = false;
+        uint32_t frameLimitUs = 0;
+    };
+
+    DispatchReflexOptionsCache _dispatchReflexOptionsCache {};
+
+    void InvalidateDispatchReflexOptionsCache() { _dispatchReflexOptionsCache.valid = false; }
+
+    bool DispatchReflexOptionsMatchSubmitted(const sl::ReflexOptions& options) const;
+    void StoreDispatchReflexOptionsCache(const sl::ReflexOptions& options);
+
+    bool Dispatch();
+
+  protected:
+    void ReleaseObjects() override final;
+    void CreateObjects(ID3D12Device* InDevice) override final;
+
+  public:
+    // IFGFeature
+    const char* Name() override final { return "DLSSG"; };
+    feature_version Version() override final;
+    HWND Hwnd() override final;
+
+    // IFGFeature_Dx12
+    bool CreateSwapchain(IDXGIFactory* factory, ID3D12CommandQueue* cmdQueue, DXGI_SWAP_CHAIN_DESC* desc,
+                         IDXGISwapChain** swapChain, bool readyToRelease) override final;
+    bool CreateSwapchain1(IDXGIFactory* factory, ID3D12CommandQueue* cmdQueue, HWND hwnd, DXGI_SWAP_CHAIN_DESC1* desc,
+                          DXGI_SWAP_CHAIN_FULLSCREEN_DESC* pFullscreenDesc, IDXGISwapChain1** swapChain,
+                          bool readyToRelease) override final;
+
+    bool ReleaseSwapchain(HWND hwnd) override final;
+
+    void CreateContext(ID3D12Device* device, FG_Constants& fgConstants) override final;
+    void Activate() override final;
+    void Deactivate() override final;
+    void DestroyFGContext() override final;
+    bool Shutdown() override final;
+
+    void EvaluateState(ID3D12Device* device, FG_Constants& fgConstants) override final;
+
+    bool Present() override final;
+
+    bool SetResource(Dx12Resource* inputResource) override final;
+    void SetCommandQueue(FG_ResourceType type, ID3D12CommandQueue* queue) override final;
+
+    void* FrameGenerationContext() override final;
+    void* SwapchainContext() override final;
+
+    DLSSG_Dx12() : IFGFeature_Dx12(), IFGFeature()
+    {
+        if (StreamlineProxy::Module() == nullptr)
+            StreamlineProxy::LoadStreamline();
+
+        if (StreamlineProxy::Module() != nullptr && !StreamlineProxy::IsD3D12Inited() &&
+            State::Instance().currentD3D12Device != nullptr)
+        {
+            StreamlineProxy::InitWithD3D12(State::Instance().currentD3D12Device);
+        }
+    }
+
+    ~DLSSG_Dx12();
+
+    // Inherited via IFGFeature_Dx12
+    bool SetInterpolatedFrameCount(UINT interpolatedFrameCount) override;
+
+    static bool C048DiagEnabled();
+    static uint64_t C048DiagNowUs();
+    static uint32_t C048DiagPrepareExecuteCommandLists(ID3D12CommandQueue* queue, UINT numCommandLists,
+                                                       ID3D12CommandList* const* ppCommandLists);
+    static void C048DiagCompleteExecuteCommandLists(uint32_t snapshotToken, ID3D12CommandQueue* queue,
+                                                    uint64_t originalEntryUs, uint64_t originalExitUs);
+    static void C048DiagMaybeReport();
+
+  private:
+    struct C048DeferredTag;
+
+    void* _c048PresentQueueIdentity = nullptr;
+    void C048RegisterDeferredTag(const C048DeferredTag& tag);
+    void C048ClearDiagState();
+};

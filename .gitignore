@@ -1,0 +1,12 @@
+/.vs/
+/out/
+/build/
+/x64/
+/OptiScaler/x64/
+*.user
+*.suo
+*.pdb
+*.obj
+*.log
+*.dmp
+*.mp4

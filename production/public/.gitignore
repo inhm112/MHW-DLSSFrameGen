@@ -1,0 +1,53 @@
+# MHWFG production candidate .gitignore
+# Auxiliary exclusion list — NOT a substitute for export boundary review.
+
+# Build outputs
+x64/
+Release/
+Debug/
+*.dll
+*.pdb
+*.obj
+*.lib
+*.exp
+*.iobj
+*.ipdb
+*.tlog
+*.lastbuildstate
+*.unsuccessfulbuild
+
+# Logs and dumps
+*.log
+*.dmp
+*.txt.bak
+
+# User-private configuration (do not commit local overrides)
+OptiScaler.ini.local
+*.user.ini
+*.local.ini
+
+# Recordings and media
+*.mp4
+*.avi
+*.mkv
+*.mov
+
+# IDE and editor files
+.vs/
+.vscode/
+*.user
+*.suo
+*.aps
+*.VC.db
+*.VC.opendb
+
+# Temporary files
+*.tmp
+*.temp
+*.bak
+~$*
+
+# OS artifacts
+Thumbs.db
+desktop.ini
+.DS_Store
