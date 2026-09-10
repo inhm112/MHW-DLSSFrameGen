@@ -21,6 +21,8 @@
 2. 游戏开启 **DirectX 12** 和 **TAA**。
 3. 退出游戏，备份游戏目录中已有的 `d3d12.dll`、`OptiScaler.ini`、`MHWFG.cmd` 和 `OptiScaler` 文件夹。已有 `d3d12.dll` 若属于其他模组，请先确认其兼容安装方式。
 
+4. 检查游戏根目录的 `nvngx_dlisp.dll`。该旧版 NGX 组件在已复现配置中会导致 Streamline 初始化异常、菜单显示 **Not ready**。若文件存在，先将其改名为 `nvngx_dlisp.dll.disabled` 保留备份，再启动游戏。不要改名 `nvngx_dlss.dll` 或 `nvngx_dlssg.dll`。
+
 ### 复制与启动
 
 1. 从本仓库 **Releases** 下载 MHWFG 运行包并解压。
@@ -81,6 +83,14 @@
 **菜单打不开或帧生成没有生效？**
 
 检查启动入口是否为 `MHWSSLauncher.exe`、游戏是否开启 DX12 和 TAA，并确认 `d3d12.dll` 位于游戏根目录、`OptiScaler` 子目录完整。打开本模组菜单的按键是 **Ins**。
+
+**DLSS 可以使用，但 FG 显示 Not ready、Active 无法勾选？**
+
+已确认一种触发条件：游戏根目录的 `nvngx_dlisp.dll`（已定位版本 `1.2.17.0`）在当前组合下触发异常，导致 FG 交换链未建立，而 DLSS 仍可正常运行。该文件不随本模组分发。RTX 4060 Laptop 的异常转储与 RTX 4070 Ti SUPER 的单变量复现均指向同一模块位置。
+
+退出游戏，将 `MonsterHunterWorld.exe` 同目录下的 `nvngx_dlisp.dll` 改名为 `nvngx_dlisp.dll.disabled`，保留文件后重新启动。需要回退时，退出游戏并恢复原名。Steam 验证游戏文件完整性或游戏更新后，请重新检查原名文件是否被恢复。
+
+这不是所有 Not ready 的唯一原因。如果文件已禁用而问题仍在，请提供新日志继续排查。
 
 **切换倍数后输出与预期不同？**
 

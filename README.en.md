@@ -21,6 +21,8 @@ Provides **DLSS Frame Generation (FG) and Multi Frame Generation (MFG)** for *Mo
 2. Enable **DirectX 12** and **TAA** in the game.
 3. Exit the game and back up any existing `d3d12.dll`, `OptiScaler.ini`, `MHWFG.cmd`, and `OptiScaler` folder in the game directory. If an existing `d3d12.dll` belongs to another mod, first confirm a compatible installation method.
 
+4. Check for `nvngx_dlisp.dll` in the game root directory. This legacy NGX component causes Streamline initialization errors and **Not ready** in the reproduced configurations. If present, rename it to `nvngx_dlisp.dll.disabled` to keep a backup before launching. Do not rename `nvngx_dlss.dll` or `nvngx_dlssg.dll`.
+
 ### Copying Files and Launching
 
 1. Download the MHWFG runtime package from this repository's **Releases** and extract it.
@@ -81,6 +83,14 @@ High-multiplier output exceeding the monitor's refresh rate may cause tearing. Y
 **The menu does not open, or frame generation is not working?**
 
 Check that you are launching through `MHWSSLauncher.exe`, that DX12 and TAA are enabled in the game, that `d3d12.dll` is in the game root directory, and that the `OptiScaler` subdirectory is complete. The key to open this mod's menu is **Ins**.
+
+**DLSS works, but FG shows Not ready and Active is unavailable?**
+
+One confirmed trigger is the game-root `nvngx_dlisp.dll` (identified version `1.2.17.0`): in the affected combination, it raises an exception that prevents the FG swapchain from being established while DLSS continues to work. This file is not distributed with this mod. An RTX 4060 Laptop crash dump and a single-variable reproduction on an RTX 4070 Ti SUPER point to the same location in this module.
+
+Exit the game and rename `nvngx_dlisp.dll` next to `MonsterHunterWorld.exe` to `nvngx_dlisp.dll.disabled`. Keep the file and relaunch. To revert, exit the game and restore its original name. After Steam verifies game files or the game updates, check whether the original filename has been restored.
+
+This is not the only possible cause of Not ready. If the file is already disabled and the issue persists, provide a fresh log for further diagnosis.
 
 **Output differs from expectations after switching multipliers?**
 
